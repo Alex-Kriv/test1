@@ -41,6 +41,31 @@ object TestFunctions {
             return Triple(cordX, cordY, newCordX)
     }
 
+    fun coordinateCalcForX(locator: String, locatorType: LocatorType): Pair<Int, Int> {
+
+        val element = findElement(locator, locatorType)
+        // посоветоваться, как это можно оптимизировать под большие сценарии, а не только сдвиг влево
+        // Пока что считаю лучшим сделать две функции (для х и для у) вовзвращающие длину/ширину и расположение)
+        //val elementHeight = androidDriver.manage().window().size.getHeight()
+        //val elementWidth = androidDriver.manage().window().size.getWidth()
+        val cordXLocation = element.location.x
+        val cordXWidth = element.size.width
+        return Pair(cordXLocation, cordXWidth)
+    }
+
+
+    fun coordinateCalcForY(locator: String, locatorType: LocatorType): Pair<Int, Int> {
+
+        val element = findElement(locator, locatorType)
+        // посоветоваться, как это можно оптимизировать под большие сценарии, а не только сдвиг влево
+        // Пока что считаю лучшим сделать две функции (для х и для у) вовзвращающие длину/ширину и расположение)
+        //val elementHeight = androidDriver.manage().window().size.getHeight()
+        //val elementWidth = androidDriver.manage().window().size.getWidth()
+        val cordYLocation = element.location.x
+        val cordYHeight = element.size.height
+        return Pair(cordYLocation, cordYHeight)
+    }
+
     /*fun takeCheckCode(){
         val text = androidDriver.pageSource
         //(Введите код из смс&#10; начало), (конец &#10;), сдвиг по ключевым символам/словам

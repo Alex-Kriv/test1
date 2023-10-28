@@ -68,11 +68,11 @@ open class MainActivity {
         TimeUnit.SECONDS.sleep(5)
     }
 
-    @AfterMethod
+    /*@AfterMethod
     fun closeApp() {
         androidDriver.terminateApp(BUNDLE_ID)
         TimeUnit.SECONDS.sleep(5)
-    }
+    }*/
 
     companion object{
         const val BUNDLE_ID = "starter.school.client"

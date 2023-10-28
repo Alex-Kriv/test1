@@ -6,6 +6,8 @@ import MainActivity
 import TestFunctions.clearField
 import TestFunctions.clickToElement
 import TestFunctions.coordinateCalc
+import TestFunctions.coordinateCalcForX
+import TestFunctions.coordinateCalcForY
 import TestFunctions.findElement
 import TestFunctions.sendText
 import TestFunctions.swipeOnScreen
@@ -59,7 +61,7 @@ class TestClassOne :MainActivity() {
         TimeUnit.SECONDS.sleep(2)
         swipeOnScreen(startCordX = 534, startCordY = 153, moveCordX = 534, moveCordY = 1308)
         TimeUnit.SECONDS.sleep(2)
-        
+
         println("Тест 1 успешно завершен")
         TimeUnit.SECONDS.sleep(5)
     }
@@ -153,9 +155,10 @@ class TestClassOne :MainActivity() {
 
     @Test
     fun TestSix(){
-        println("Запущен тест 6")
+        println("Запущен тест 6. Добавление/удаление адреса")
 
         val needAuthorizationUser: Boolean = true
+        TimeUnit.SECONDS.sleep(2)
         checkAuthorizationUser(needAuthorizationUser)
         // веленский пеереулок 6
         clickToElement(profileButton.androidXPath, LocatorType.XPATH) // переход в окно профиля
@@ -212,9 +215,18 @@ class TestClassOne :MainActivity() {
         clickToElement(saveAddressButton.androidAccessibilityId, LocatorType.ACCESSIBILITY_ID)
         TimeUnit.SECONDS.sleep(2)
 
-        swipeOnScreen(startCordX = 568, startCordY = 160, moveCordX = 600, moveCordY = 1200)
+        //swipeOnScreen(startCordX = 568, startCordY = 160, moveCordX = 600, moveCordY = 1200)
+        val (cordXLocation, cordXWidth) = coordinateCalcForX(myAddressPage.androidXPath, LocatorType.XPATH)
+        val (cordYLocation, cordYHeight) = coordinateCalcForY(myAddressPage.androidXPath, LocatorType.XPATH)
+        val startCordX = cordXLocation + cordXWidth / 2
+        val startCordY = cordYLocation + cordYHeight / 15
+        val moveCordX = cordXLocation + cordXWidth / 2
+        val moveCordY = cordYLocation + cordYHeight / 2
+        TimeUnit.SECONDS.sleep(4)
+        println("startCordX $startCordX, startCordY $startCordY, moveCordX $moveCordX, moveCordY $moveCordY")
+        swipeOnScreen(startCordX = startCordX, startCordY = startCordY, moveCordX = moveCordX, moveCordY = moveCordY)
 
-        TimeUnit.SECONDS.sleep(2)
+        TimeUnit.SECONDS.sleep(4)
         clickToElement(mainPageButton.androidXPath, LocatorType.XPATH)
 
     }
