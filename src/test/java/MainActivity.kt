@@ -41,7 +41,9 @@ open class MainActivity {
 
         androidDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5)) //почему-то сломалось само по себе,
 
+        // данная конструкция для того чтобы каждый раз открывалось приложение заново
         startMainPage()
+        //androidDriver.terminateApp(BUNDLE_ID)
     }
 
     @AfterSuite // закрываем драйвер, но как оставить приложение в конечном состоянии?

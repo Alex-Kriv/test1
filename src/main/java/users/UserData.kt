@@ -10,6 +10,11 @@ data class UserData (
     val city : String = "",
     val street : String = "",
     val homeNumber : String = "",
+    val apartNumber : String = "",
+    val entrance : String = "",
+    val intercom : String = "",
+    val floor : String = "",
+    val commentAddress : String = "",
     var userWasAuthorized : Boolean = false
 
 )

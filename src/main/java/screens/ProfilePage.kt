@@ -40,4 +40,6 @@ object Profile {
         androidAccessibilityId = "Способы оплаты",
         elementName = "Выбрать способ оплаты",
     )
+
+
 }
