@@ -6,7 +6,7 @@ import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.remote.AndroidMobileCapabilityType
 import io.appium.java_client.remote.IOSMobileCapabilityType
 import io.appium.java_client.remote.MobileCapabilityType
-import openApp.StartMainPage.startMainPage
+import TestFunctions.startMainPage
 import openApp.StartMainPage.installDriverOne
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.testng.annotations.*
@@ -33,11 +33,21 @@ open class MainActivity {
         paramTimeToSearchElement: Long, paramPathToApp: String
     ) {
         // ну это как-то ужасно выглядит, уточнить как лучше сделать
-        installDriverOne(
+        val (capabilities, url) = installDriverOne(
             paramPlatformName, paramPlatformVersion,
             paramDeviceName, paramUDID,
             paramTimeToSearchElement, paramPathToApp
         )
+
+        platformType = paramPlatformName
+
+        if (paramPlatformName == TypeOS.IOS) {
+            iosDriver = IOSDriver(url, capabilities)
+            iosDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(paramTimeToSearchElement))
+        } else {
+            androidDriver = AndroidDriver(url, capabilities)
+            androidDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(paramTimeToSearchElement))
+        }
 
         startMainPage()
 
