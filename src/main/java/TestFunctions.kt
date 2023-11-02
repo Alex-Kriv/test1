@@ -1,36 +1,71 @@
-import GlobalVarlables.androidDriver
+import GlobalVariables.androidDriver
+import GlobalVariables.iosDriver
+import GlobalVariables.platformType
 import io.appium.java_client.AppiumBy
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.interactions.Pause
 import org.openqa.selenium.interactions.PointerInput
 import org.openqa.selenium.interactions.Sequence
-import org.openqa.selenium.support.pagefactory.ElementLocator
-import org.w3c.dom.Text
+import users.TestUser
+import users.UserData
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 object TestFunctions {
 
-    fun clickToElement(locator: String, locatorType: LocatorType){
+    fun clickToElement(
+        locatorAndroid: String,
+        locatorTypeAndroid: LocatorType,
+        locatorIOS: String,
+        locatorTypeIOS: LocatorType
+    ){
         // создаем глобальную функцию клика по элементу
+        val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
+            locatorAndroid,
+            locatorTypeAndroid,
+            locatorIOS,
+            locatorTypeIOS
+        )
+
         TimeUnit.SECONDS.sleep(1)
-        val element = findElement(locator, locatorType)
+        val element = findElement(finalLocator, finalLocatorType)
         element.click()
     }
 
-    fun sendText(locator: String, locatorType: LocatorType, text: String){
-        val element = findElement(locator, locatorType)
+    fun sendText(
+        locatorAndroid: String, locatorTypeAndroid: LocatorType,
+        locatorIOS: String, locatorTypeIOS: LocatorType,
+        text: String
+    ){
+        val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
+            locatorAndroid, locatorTypeAndroid,
+            locatorIOS, locatorTypeIOS
+        )
+        val element = findElement(finalLocator, finalLocatorType)
         element.sendKeys(text)
     }
 
-    fun clearField(locator: String, locatorType: LocatorType){
-        val element = findElement(locator, locatorType)
+    fun clearField(
+        locatorAndroid: String, locatorTypeAndroid: LocatorType,
+        locatorIOS: String, locatorTypeIOS: LocatorType,
+        ){
+        val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
+            locatorAndroid, locatorTypeAndroid,
+            locatorIOS, locatorTypeIOS
+        )
+        val element = findElement(finalLocator, finalLocatorType)
         element.clear()
     }
 
-    fun coordinateCalc(locator: String, locatorType: LocatorType): Triple<Int, Int, Int> {
-
-            val element = findElement(locator, locatorType)
+    fun coordinateCalc(
+        locatorAndroid: String, locatorTypeAndroid: LocatorType,
+        locatorIOS: String, locatorTypeIOS: LocatorType,
+    ): Triple<Int, Int, Int> {
+        val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
+            locatorAndroid, locatorTypeAndroid,
+            locatorIOS, locatorTypeIOS
+        )
+            val element = findElement(finalLocator, finalLocatorType)
             // посоветоваться, как это можно оптимизировать под большие сценарии, а не только сдвиг влево
             // Пока что считаю лучшим сделать две функции (для х и для у) вовзвращающие длину/ширину и расположение)
             //val elementHeight = androidDriver.manage().window().size.getHeight()
@@ -41,9 +76,16 @@ object TestFunctions {
             return Triple(cordX, cordY, newCordX)
     }
 
-    fun coordinateCalcForX(locator: String, locatorType: LocatorType): Pair<Int, Int> {
+    fun coordinateCalcForX(
+        locatorAndroid: String, locatorTypeAndroid: LocatorType,
+        locatorIOS: String, locatorTypeIOS: LocatorType,
+    ): Pair<Int, Int> {
 
-        val element = findElement(locator, locatorType)
+        val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
+            locatorAndroid, locatorTypeAndroid,
+            locatorIOS, locatorTypeIOS
+        )
+        val element = findElement(finalLocator, finalLocatorType)
         // посоветоваться, как это можно оптимизировать под большие сценарии, а не только сдвиг влево
         // Пока что считаю лучшим сделать две функции (для х и для у) вовзвращающие длину/ширину и расположение)
         //val elementHeight = androidDriver.manage().window().size.getHeight()
@@ -53,15 +95,22 @@ object TestFunctions {
         return Pair(cordXLocation, cordXWidth)
     }
 
+    fun coordinateCalcForY(
+        locatorAndroid: String, locatorTypeAndroid: LocatorType,
+        locatorIOS: String, locatorTypeIOS: LocatorType,
+    ): Pair<Int, Int> {
 
-    fun coordinateCalcForY(locator: String, locatorType: LocatorType): Pair<Int, Int> {
+        val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
+            locatorAndroid, locatorTypeAndroid,
+            locatorIOS, locatorTypeIOS
+        )
 
-        val element = findElement(locator, locatorType)
+        val element = findElement(finalLocator, finalLocatorType)
         // посоветоваться, как это можно оптимизировать под большие сценарии, а не только сдвиг влево
         // Пока что считаю лучшим сделать две функции (для х и для у) вовзвращающие длину/ширину и расположение)
         //val elementHeight = androidDriver.manage().window().size.getHeight()
         //val elementWidth = androidDriver.manage().window().size.getWidth()
-        val cordYLocation = element.location.x
+        val cordYLocation = element.location.y
         val cordYHeight = element.size.height
         return Pair(cordYLocation, cordYHeight)
     }
@@ -82,7 +131,12 @@ object TestFunctions {
         actions.addAction(finger.createPointerDown(PointerInput.MouseButton.MIDDLE.asArg()))
         actions.addAction(finger.createPointerUp(PointerInput.MouseButton.MIDDLE.asArg()))
 
-        androidDriver.perform(listOf(actions))
+        if (platformType == TypeOS.ANDROID) {
+            androidDriver.perform(listOf(actions))
+        }
+        else {
+            iosDriver.perform(listOf(actions))
+        }
     }
 
     fun swipeOnScreen(startCordX: Int, startCordY: Int, moveCordX: Int, moveCordY: Int){
@@ -96,28 +150,107 @@ object TestFunctions {
         actions.addAction(finger.createPointerMove(Duration.ofMillis(1000), PointerInput.Origin.viewport(), moveCordX, moveCordY))
         actions.addAction(finger.createPointerUp(PointerInput.MouseButton.MIDDLE.asArg()))
 
-        androidDriver.perform(listOf(actions))
+        if (platformType == TypeOS.ANDROID) {
+            androidDriver.perform(listOf(actions))
+        }
+        else {
+            iosDriver.perform(listOf(actions))
+        }
     }
 
-    fun checkAvailableElement(locator: String, locatorType: LocatorType): Boolean{
-        // вот здесь непонятно, почему в примере лекции мы задавали явно значение переменной = false
-        // а при подобной реализации переменную обьявлять не нужно?
-        // поиск элемента, если найден - тру, если нет - фалс
-        val element = findElement(locator, locatorType)
+    fun checkAvailableElement(
+        locatorAndroid: String, locatorTypeAndroid: LocatorType,
+        locatorIOS: String, locatorTypeIOS: LocatorType
+    ): Boolean{
+
+        val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
+            locatorAndroid, locatorTypeAndroid,
+            locatorIOS, locatorTypeIOS
+        )
+
+        val element = findElement(finalLocator, finalLocatorType)
         return element.isEnabled
     }
 
+    fun checkWhichUserData(element1: String?, element2: String?, element3: String?): UserData {
 
+        if (
+            element1 == TestUser.testUserForRegistration.name &&
+            element2 == TestUser.testUserForRegistration.email &&
+            element3 == TestUser.testUserForRegistration.instagram
+        ) {
+            return TestUser.testUserForRegistrationAnother
+        } else {
+            return TestUser.testUserForRegistration
+        }
+    }
+
+    fun getAttributeText(
+        locatorAndroid: String,
+        locatorTypeAndroid: LocatorType,
+        locatorIOS: String,
+        locatorTypeIOS: LocatorType
+    ): String? {
+
+        if (platformType == TypeOS.IOS) {
+            return findElement(locatorIOS, locatorTypeIOS).getAttribute("value")
+        } else {
+            return findElement(locatorAndroid, locatorTypeAndroid).getAttribute("text")
+        }
+    }
+
+    fun platformCheck(
+        locatorAndroid: String,
+        locatorTypeAndroid: LocatorType,
+        locatorIOS: String,
+        locatorTypeIOS: LocatorType
+    ) : Pair<String, LocatorType> {
+
+        val finalLocator: String
+        val finalLocatorType: LocatorType
+        if (platformType == TypeOS.ANDROID) {
+            finalLocator = locatorAndroid
+            finalLocatorType = locatorTypeAndroid
+        } else {
+            finalLocator = locatorIOS
+            finalLocatorType = locatorTypeIOS
+        }
+        return Pair(finalLocator, finalLocatorType)
+    }
 
     fun findElement(locator: String, locatorType: LocatorType) : WebElement {
         TimeUnit.SECONDS.sleep(2)
-        return when (locatorType) {
-            //  не понятен синтаксис : webelement
-            LocatorType.ID -> androidDriver.findElement(AppiumBy.id(locator))
-            LocatorType.XPATH -> androidDriver.findElement(AppiumBy.xpath(locator))
-            LocatorType.ACCESSIBILITY_ID ->  androidDriver.findElement(AppiumBy.accessibilityId(locator))
-            LocatorType.CLASS_NAME -> androidDriver.findElement(AppiumBy.className(locator))
+        lateinit var element: WebElement
+        when (locatorType) {
+            LocatorType.ID -> {
+                if (platformType == TypeOS.ANDROID) {
+                    element = androidDriver.findElement(AppiumBy.id(locator))
+                } else element = iosDriver.findElement(AppiumBy.id(locator))
+            }
+
+            LocatorType.XPATH -> {
+                if (platformType == TypeOS.ANDROID) {
+                    element = androidDriver.findElement(AppiumBy.xpath(locator))
+                } else element = iosDriver.findElement(AppiumBy.xpath(locator))
+            }
+
+            LocatorType.ACCESSIBILITY_ID -> {
+                if (platformType == TypeOS.ANDROID) {
+                    element = androidDriver.findElement(AppiumBy.accessibilityId(locator))
+                } else element = iosDriver.findElement(AppiumBy.accessibilityId(locator))
+            }
+
+            LocatorType.CLASS_NAME -> {
+                if (platformType == TypeOS.ANDROID) {
+                    element = androidDriver.findElement(AppiumBy.className(locator))
+                } else element = iosDriver.findElement(AppiumBy.className(locator))
+            }
+
+            LocatorType.IOS_CLASS_CHAIN -> element = iosDriver.findElement(AppiumBy.iOSClassChain(locator))
+            LocatorType.IOS_PREDICATE_STRING -> element = iosDriver.findElement(AppiumBy.iOSNsPredicateString(locator))
+            else -> {}
         }
+        return element
     }
 
     }

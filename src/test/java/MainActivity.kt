@@ -1,55 +1,55 @@
-import GlobalVarlables.androidDriver
-import TestFunctions.clickToElement
-import io.appium.java_client.AppiumBy
+import GlobalVariables.androidDriver
+import GlobalVariables.platformType
+import GlobalVariables.iosDriver
 import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.remote.AndroidMobileCapabilityType
+import io.appium.java_client.remote.IOSMobileCapabilityType
 import io.appium.java_client.remote.MobileCapabilityType
 import openApp.StartMainPage.startMainPage
+import openApp.StartMainPage.installDriverOne
 import org.openqa.selenium.remote.DesiredCapabilities
+import org.testng.annotations.*
 import org.testng.annotations.AfterClass
-import org.testng.annotations.AfterMethod
 import org.testng.annotations.AfterSuite
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.BeforeSuite
-import screens.Onboarding.errorCheckButton
-import screens.Onboarding.nextButton
-import screens.Onboarding.pickupButton
-import screens.Onboarding.selectRusButton
+import org.testng.annotations.Parameters
 import java.net.URL
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 open class MainActivity {
     @BeforeSuite //
-    fun installDriver() {
-        // пока не понимаю как это убрать в отдельный класс, только если засунуть в обьект как startMainPage
-        val capabilities = DesiredCapabilities()
-        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android")
-        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "14")
-        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Pixel_3a")
-        capabilities.setCapability(MobileCapabilityType.APP, "/users/admin/apps/app-profile.apk")
-        capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "uiautomator2")
-        capabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, "starter.school.client")
-        capabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, "starter.school.client.MainActivity")
-        capabilities.setCapability(MobileCapabilityType.NO_RESET, true)
+    @Parameters(
+        value = ["paramPlatformName", "paramPlatformVersion", "paramDeviceName",
+            "paramUDID", "paramTimeToSearchElement", "paramPathToApp"]
+    )
 
-        val url = URL("http://127.0.0.1:4723/")
+    fun installDriver(
+        paramPlatformName: TypeOS, paramPlatformVersion: String,
+        paramDeviceName: String, paramUDID: String,
+        paramTimeToSearchElement: Long, paramPathToApp: String
+    ) {
+        // ну это как-то ужасно выглядит, уточнить как лучше сделать
+        installDriverOne(
+            paramPlatformName, paramPlatformVersion,
+            paramDeviceName, paramUDID,
+            paramTimeToSearchElement, paramPathToApp
+        )
 
-        androidDriver = AndroidDriver(url, capabilities) // устанавливаем аппиум драйвер для андроид
-        // передавая ранее заданные параметры (capabilities)
-
-        androidDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5)) //почему-то сломалось само по себе,
-
-        // данная конструкция для того чтобы каждый раз открывалось приложение заново
         startMainPage()
-        //androidDriver.terminateApp(BUNDLE_ID)
+
+        // данная конструкция для того чтобы каждый раз открывалось приложение заново, временный костыль для дебагинга
+       // if (paramPlatformName == TypeOS.ANDROID) {androidDriver.terminateApp(BUNDLE_ID)} else iosDriver.terminateApp(
+            //BUNDLE_ID)
     }
 
     @AfterSuite // закрываем драйвер, но как оставить приложение в конечном состоянии?
 
     fun quitDriver() {
-        androidDriver.quit()
+        if (platformType == TypeOS.ANDROID ) {androidDriver.quit()} else iosDriver.quit()
     }
 
     @BeforeClass
@@ -64,15 +64,18 @@ open class MainActivity {
 
     @BeforeMethod
     fun launceApp(){
-        androidDriver.activateApp(BUNDLE_ID)
+        if (platformType == TypeOS.ANDROID ) {androidDriver.activateApp(BUNDLE_ID)} else {
+            iosDriver.activateApp(BUNDLE_ID)
+        }
         TimeUnit.SECONDS.sleep(5)
     }
 
-    /*@AfterMethod
+    @AfterMethod
     fun closeApp() {
-        androidDriver.terminateApp(BUNDLE_ID)
+        if (platformType == TypeOS.ANDROID) {androidDriver.terminateApp(BUNDLE_ID)} else iosDriver.terminateApp(
+            BUNDLE_ID)
         TimeUnit.SECONDS.sleep(5)
-    }*/
+    }
 
     companion object{
         const val BUNDLE_ID = "starter.school.client"
