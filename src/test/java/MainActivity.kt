@@ -3,12 +3,8 @@ import GlobalVariables.platformType
 import GlobalVariables.iosDriver
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSDriver
-import io.appium.java_client.remote.AndroidMobileCapabilityType
-import io.appium.java_client.remote.IOSMobileCapabilityType
-import io.appium.java_client.remote.MobileCapabilityType
-import TestFunctions.startMainPage
-import openApp.StartMainPage.installDriverOne
-import org.openqa.selenium.remote.DesiredCapabilities
+import openApp.StartMainPage.getCapabilities
+import openApp.StartMainPage.startMainPage
 import org.testng.annotations.*
 import org.testng.annotations.AfterClass
 import org.testng.annotations.AfterSuite
@@ -33,11 +29,13 @@ open class MainActivity {
         paramTimeToSearchElement: Long, paramPathToApp: String
     ) {
         // ну это как-то ужасно выглядит, уточнить как лучше сделать
-        val (capabilities, url) = installDriverOne(
+        val capabilities = getCapabilities(
             paramPlatformName, paramPlatformVersion,
             paramDeviceName, paramUDID,
             paramTimeToSearchElement, paramPathToApp
         )
+
+        val url = URL("http://127.0.0.1:4723/")
 
         platformType = paramPlatformName
 
@@ -51,9 +49,6 @@ open class MainActivity {
 
         startMainPage()
 
-        // данная конструкция для того чтобы каждый раз открывалось приложение заново, временный костыль для дебагинга
-       // if (paramPlatformName == TypeOS.ANDROID) {androidDriver.terminateApp(BUNDLE_ID)} else iosDriver.terminateApp(
-            //BUNDLE_ID)
     }
 
     @AfterSuite // закрываем драйвер, но как оставить приложение в конечном состоянии?

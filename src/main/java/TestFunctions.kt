@@ -6,7 +6,6 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.interactions.Pause
 import org.openqa.selenium.interactions.PointerInput
 import org.openqa.selenium.interactions.Sequence
-import screens.Onboarding
 import users.TestUser
 import users.UserData
 import java.time.Duration
@@ -18,7 +17,8 @@ object TestFunctions {
         locatorAndroid: String,
         locatorTypeAndroid: LocatorType,
         locatorIOS: String,
-        locatorTypeIOS: LocatorType
+        locatorTypeIOS: LocatorType,
+        elementName: String,
     ){
         // создаем глобальную функцию клика по элементу
         val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
@@ -36,7 +36,8 @@ object TestFunctions {
     fun sendText(
         locatorAndroid: String, locatorTypeAndroid: LocatorType,
         locatorIOS: String, locatorTypeIOS: LocatorType,
-        text: String
+        text: String,
+        elementName: String,
     ){
         val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
             locatorAndroid, locatorTypeAndroid,
@@ -49,6 +50,7 @@ object TestFunctions {
     fun clearField(
         locatorAndroid: String, locatorTypeAndroid: LocatorType,
         locatorIOS: String, locatorTypeIOS: LocatorType,
+        elementName: String
         ){
         val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
             locatorAndroid, locatorTypeAndroid,
@@ -116,13 +118,6 @@ object TestFunctions {
         return Pair(cordYLocation, cordYHeight)
     }
 
-    /*fun takeCheckCode(){
-        val text = androidDriver.pageSource
-        //(Введите код из смс&#10; начало), (конец &#10;), сдвиг по ключевым символам/словам
-        val textOne = text.substringAfter("Введите код из смс&#10;")
-        val textTwo = textOne.substringBefore('&')
-    }*/
-
     fun tapByCoordinates(cordX: Int, cordY: Int) {
 
         val finger = PointerInput(PointerInput.Kind.TOUCH,"finger")
@@ -161,7 +156,8 @@ object TestFunctions {
 
     fun checkAvailableElement(
         locatorAndroid: String, locatorTypeAndroid: LocatorType,
-        locatorIOS: String, locatorTypeIOS: LocatorType
+        locatorIOS: String, locatorTypeIOS: LocatorType,
+        elementName: String
     ): Boolean{
 
         val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
@@ -174,7 +170,7 @@ object TestFunctions {
     }
 
     fun checkWhichUserData(element1: String?, element2: String?, element3: String?): UserData {
-
+        // по хорошему нужно пернести данную функцию в addressPage
         if (
             element1 == TestUser.testUserForRegistration.name &&
             element2 == TestUser.testUserForRegistration.email &&
@@ -250,59 +246,6 @@ object TestFunctions {
             else -> {}
         }
         return element
-    }
-
-
-    fun startMainPage() {
-        try {
-
-            clickToElement(
-                locatorAndroid =  Onboarding.selectRusButton.androidAccessibilityId,
-                locatorTypeAndroid =  LocatorType.ACCESSIBILITY_ID,
-                locatorIOS = Onboarding.selectRusButton.iosAccessibilityId,
-                locatorTypeIOS =  LocatorType.ACCESSIBILITY_ID,
-            ) //выбор кнопки рус
-
-            clickToElement(
-                locatorAndroid = Onboarding.nextButton.androidAccessibilityId,
-                locatorTypeAndroid = LocatorType.ACCESSIBILITY_ID,
-                locatorTypeIOS = LocatorType.ACCESSIBILITY_ID,
-                locatorIOS = Onboarding.nextButton.iosAccessibilityId
-            )
-
-            try { // не работает при типе локатора DEFAULT, lateinit property element has not been initialized
-                clickToElement(
-                    locatorAndroid = "1",
-                    locatorTypeAndroid = LocatorType.ACCESSIBILITY_ID,
-                    locatorIOS = Onboarding.iosEnableNotificationWindow.iosAccessibilityId,
-                    locatorTypeIOS = LocatorType.ACCESSIBILITY_ID
-                )
-                clickToElement(
-                    locatorAndroid = "1",
-                    locatorTypeAndroid = LocatorType.ACCESSIBILITY_ID,
-                    locatorIOS = Onboarding.iosTrackYourActivityWindow.iosAccessibilityId,
-                    locatorTypeIOS = LocatorType.ACCESSIBILITY_ID
-                )
-            } catch (err: org.openqa.selenium.NoSuchElementException) {
-                println("Тест запущен на андроиде, окно уведомлений пропущенно")
-            }
-
-            // clickToElement(locator = "Далее", locatorType = LocatorType.ACCESSIBILITY_ID) // то же что и выше, только для андроида
-
-            TimeUnit.SECONDS.sleep(5)
-
-            clickToElement(
-                Onboarding.pickupButton.androidAccessibilityId,
-                LocatorType.ACCESSIBILITY_ID,
-                Onboarding.pickupButton.iosAccessibilityId,
-                LocatorType.ACCESSIBILITY_ID
-            ) // нажать на кноку самовывоз
-
-        } catch (err: org.openqa.selenium.NoSuchElementException) {
-            println("Поймана ошибка поиска одного из элементов при прохождении этапа открытия главного экрана приложения")
-        }
-
-        TimeUnit.SECONDS.sleep(5)
     }
 
     }
