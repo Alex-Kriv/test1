@@ -34,9 +34,9 @@ class TestClassOne :MainActivity() {
 
         TimeUnit.SECONDS.sleep(2)
 
-        userDataPage.enterNewEmailToNameTextBox(selectUserData)
+        userDataPage.enterNewEmailToEmailTextBox(selectUserData)
 
-        userDataPage.enterNewInstagramToNameTextBox(selectUserData)
+        userDataPage.enterNewInstagramToInstagramTextBox(selectUserData)
 
         userDataPage.clickSaveUserDataButton()
 

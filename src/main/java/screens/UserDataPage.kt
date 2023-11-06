@@ -59,7 +59,7 @@ object UserDataPage {
         )
     }
 
-    fun enterNewEmailToNameTextBox(selectUserData: UserData) {
+    fun enterNewEmailToEmailTextBox(selectUserData: UserData) {
         clickToElement(
             emailTextBox.androidXPath, LocatorType.XPATH,
             emailTextBox.iosAccessibilityId, LocatorType.ACCESSIBILITY_ID,
@@ -78,7 +78,7 @@ object UserDataPage {
         )
     }
 
-    fun enterNewInstagramToNameTextBox(selectUserData: UserData) {
+    fun enterNewInstagramToInstagramTextBox(selectUserData: UserData) {
         clickToElement(
             instagramTextBox.androidXPath, LocatorType.XPATH,
             instagramTextBox.iosAccessibilityId, LocatorType.ACCESSIBILITY_ID,
