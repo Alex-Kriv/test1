@@ -2,6 +2,15 @@ package tests
 
 import MainActivity
 import TestFunctions.tapByCoordinates
+import api_client.environment.Environment
+import api_client.environment.Environment.environment
+import api_client.pojo.CategoriesPojo
+import api_client.requests.auth.AuthLogin
+import api_client.requests.auth.AuthResetCode
+import api_client.requests.auth.SessionId
+import api_client.requests.categories.Categories
+import api_client.specifications.Specifications.installSpecification
+import api_client.specifications.Specifications.requestSpec
 import general_cases_for_tests.AuthorizationScenarios.checkAuthorizationUser
 import org.testng.annotations.Test
 import screens.*
@@ -11,7 +20,59 @@ import java.util.concurrent.TimeUnit
 class TestClassOne :MainActivity() {
 
 
+   @Test
+   fun testOne(){
+
+       installSpecification(requestSpec(environment.host))
+
+       Categories.get(mutableMapOf())
+       println()
+       println("something")
+
+       //val phone = AuthResetCode.authResetCodeReqBody("79231775570")
+       //AuthResetCode.post(phone)
+       AuthResetCode.post("{" +
+               "\"phone\": \"79231775570\"" + "," +
+               "\"code\": \"3256\"" +
+               "}")
+
+
+       /* val token = AuthResetCode.post("{" +
+               "\"phone\": \"79231775570\"" + "," +
+               "\"code\": \"3256\"" +
+               "}").toString()
+       val token1 = token.substringAfter("<html>\n" +
+               "  <body>")
+       val token3 = token1.substringBefore("</html>")
+       println(token3)
+
+        */
+       // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Ijc5MjMxNzc1NTcwIiwiaWF0IjoxNjk5ODQ2NTcwLCJleHAiOjE3MzEzODI1NzB9.p5ORTSEt0A9S8LEXjUeFK2aPy8zV88l5xE4s3rO3xto</body>
+       // только один раз удалось получить токен в консоли
+
+   }
+
     @Test
+    fun testTwo(){
+        // получение токена и обращение к auth/login
+        installSpecification(requestSpec(environment.host))
+        println(environment.authToken)
+        val reqBodyForAuth = AuthLogin.authLoginReqBody("79231775570", "3256")
+        TimeUnit.SECONDS.sleep(5)
+        val token = AuthLogin.post(reqBodyForAuth).toString() // получил токен, но почему-то вконце остается kotlin.unit
+        Environment.environment.authToken = token.substringBefore("kotlin.Unit")
+        println(environment.authToken)
+    }
+
+    @Test
+    fun testThree(){
+        installSpecification(requestSpec(environment.host))
+        SessionId.get(mutableMapOf()) // не пойму почему приходит хтмл
+        println(111111)
+
+    }
+
+ /*   @Test
     // ну это какой-то пздц если честно... как сократить код пока нет идей
     fun testOne() {
         println("Тест задание 1. Изменение и проверка корректности личных данных")
@@ -213,4 +274,6 @@ class TestClassOne :MainActivity() {
         mainPage.clickMainPageButton()
     }
 
+
+  */
 }
