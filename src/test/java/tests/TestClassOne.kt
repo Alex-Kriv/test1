@@ -60,6 +60,7 @@ class TestClassOne :MainActivity() {
         // присвоение новых хэдеров выполнено в функции хэдер. если нужно будет использовать пустое поле токена
         // то придется сначаал передать пустое значение в enviriments.authToken, костыль лютый
         // но не придумал, как сделать проще
+        // можно сразу в функции гет,пост задать значение хэдера по типу headers["authorization"] = resBody
 
         Meals.get(mutableMapOf())
         User.get(mutableMapOf())
