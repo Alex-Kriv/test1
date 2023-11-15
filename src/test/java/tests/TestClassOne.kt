@@ -1,19 +1,17 @@
 package tests
 
 import MainActivity
-import TestFunctions.tapByCoordinates
 import api_client.environment.Environment
 import api_client.environment.Environment.environment
-import api_client.pojo.CategoriesPojo
+import api_client.pojo.auth.AuthResetCodePojo
 import api_client.requests.auth.AuthLogin
 import api_client.requests.auth.AuthResetCode
 import api_client.requests.auth.SessionId
 import api_client.requests.categories.Categories
+import api_client.requests.meals.Meals
 import api_client.specifications.Specifications.installSpecification
 import api_client.specifications.Specifications.requestSpec
-import general_cases_for_tests.AuthorizationScenarios.checkAuthorizationUser
 import org.testng.annotations.Test
-import screens.*
 import java.util.concurrent.TimeUnit
 
 
@@ -26,16 +24,17 @@ class TestClassOne :MainActivity() {
        installSpecification(requestSpec(environment.host))
 
        Categories.get(mutableMapOf())
+       //Categories.resBody.get(0).accessibility
        println()
        println("something")
 
-       //val phone = AuthResetCode.authResetCodeReqBody("79231775570")
-       //AuthResetCode.post(phone)
-       AuthResetCode.post("{" +
+       val phone = AuthResetCode.authResetCodeReqBody("79231775570")
+       AuthResetCode.post(phone)
+       /*AuthResetCode.post("{" +
                "\"phone\": \"79231775570\"" + "," +
                "\"code\": \"3256\"" +
                "}")
-
+        */
 
        /* val token = AuthResetCode.post("{" +
                "\"phone\": \"79231775570\"" + "," +
@@ -66,14 +65,28 @@ class TestClassOne :MainActivity() {
 
     @Test
     fun testThree(){
+
         installSpecification(requestSpec(environment.host))
-        SessionId.get(mutableMapOf()) // не пойму почему приходит хтмл
-        println(111111)
+        SessionId.get(mutableMapOf())
+        TimeUnit.SECONDS.sleep(5)
+
+        val phone = AuthResetCode.authResetCodeReqBody("79231775570").phone
+        AuthResetCode.post(AuthResetCode.authResetCodeReqBody("79231775570"))
+
+        TimeUnit.SECONDS.sleep(5)
+        AuthLogin.post(AuthLogin.authLoginReqBody(phone, "3256"))
+        AuthLogin.authLoginReqBody(phone, "3256")
+
+        // присвоение новых хэдеров выполнено в функции хэдер. если нужно будет использовать пустое поле токена
+        // то придется сначаал передать пустое значение в enviriments.authToken, костыль лютый
+        // но не придумал, как сделать проще
+
+        Meals.get(mutableMapOf())
 
     }
 
  /*   @Test
-    // ну это какой-то пздц если честно... как сократить код пока нет идей
+
     fun testOne() {
         println("Тест задание 1. Изменение и проверка корректности личных данных")
 

@@ -2,7 +2,9 @@ package api_client.requests.auth
 
 import api_client.Get
 import api_client.Res
+import api_client.environment.Environment
 import api_client.environment.Environment.endPoints
+import api_client.environment.Environment.environment
 import io.restassured.response.Response
 
 object SessionId : Get, Res  {
@@ -22,8 +24,8 @@ object SessionId : Get, Res  {
 
         )
         resBody = getDataFromJSON(responseJSON)
-        println(1111111111111)
-        println(resBody)
+        environment.sessionId = resBody
+        println(environment.sessionId)
     }
 
 }

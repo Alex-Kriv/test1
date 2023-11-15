@@ -1,7 +1,9 @@
 package api_client
 
 import ResponseType
-import api_client.environment.Environment.headers
+import api_client.environment.Environment.environment
+import api_client.environment.Environment.getNewHeaders
+//import api_client.environment.Environment.headers
 import com.google.gson.Gson
 import io.restassured.RestAssured.given
 import io.restassured.response.Response
@@ -17,6 +19,7 @@ interface Post : Res {
         reqBody: Any,
         responseType: ResponseType
     ): Response {
+        val headers = getNewHeaders(token = environment.authToken, id = environment.sessionId)
         val response = given()
             .headers(headers)
             .body(reqBody)
@@ -42,7 +45,7 @@ interface Get : Res {
         queryParams: MutableMap<String, String> = mutableMapOf(),
         responseType: ResponseType
     ): Response {
-
+        val headers = getNewHeaders(token = environment.authToken, id = environment.sessionId)
         val response = given()
             .headers(headers)
             .queryParams(queryParams)
@@ -65,7 +68,7 @@ interface Res {
     fun getDataFromJSON(response: Response): Any {
         val jsonString = response.toString()
         val gson = Gson()
-        return gson.fromJson(jsonString, Any::class.java)
+        return gson.fromJson(jsonString, Any::class.java) // вместо эни класс который нужно распарсить
     }
 
 }
