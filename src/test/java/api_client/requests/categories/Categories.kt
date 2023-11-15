@@ -13,10 +13,10 @@ object Categories : Get, Res, CategoriesPojo() {
 
     override lateinit var resBody: List<CategoriesRes>
 
-    override fun getDataFromJSON(response: Response): List<CategoriesRes> {
+    override fun getDataFromJSON(response: Response): List<CategoriesRes> { // массив категорий
         val jsonString: String = response.asString()
         val gson = Gson()
-        val itemType = object : TypeToken<List<CategoriesRes>>() {}.type
+        val itemType = object : TypeToken<List<CategoriesRes>>() {}.type // массив массивов
         return gson.fromJson(jsonString, itemType)
     }
 

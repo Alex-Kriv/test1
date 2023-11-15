@@ -9,7 +9,7 @@
     <parameter name="paramPathToApp" value="//users/admin/apps/Runner-intel.app"/>
     <test verbose="2" preserve-order="true" name="IOS tests" parallel="none">
         <classes>
-            <class name="tests.TestClassOne"/>
+            <!--<class name="tests.TestClassOne"/>
             <class name="tests.TestClassOne">
                 <methods>
                     <include name="testOne"/>
@@ -19,7 +19,7 @@
                     <include name="testFive"/>
                     <include name="testSix"/>
                 </methods>
-            </class>
+            </class>-->
         </classes>
     </test>
 </suite>

@@ -44,6 +44,7 @@ object Environment {
         val resetCode: String = "auth/resetCode",
         val authLogin: String = "auth/login",
         val sessionId: String = "user/sessionId",
-        val meals: String = "meals/c65fc68-dfd9-4591-a8f2-9edf77fbd3fd/v2"
+        val meals: String = "meals/8c65fc68-dfd9-4591-a8f2-9edf77fbd3fd/v2",
+        val user: String = "user/v2"
     )
 }

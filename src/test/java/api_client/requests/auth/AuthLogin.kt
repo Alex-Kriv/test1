@@ -5,7 +5,6 @@ import api_client.Res
 import api_client.environment.Environment.endPoints
 import api_client.environment.Environment.environment
 import api_client.pojo.auth.AuthLoginPojo
-import api_client.pojo.auth.AuthResetCodePojo
 import io.restassured.response.Response
 
 object AuthLogin : Post, Res, AuthLoginPojo() {
@@ -30,12 +29,11 @@ object AuthLogin : Post, Res, AuthLoginPojo() {
         )
         // перенос ответа по классам для дальнейшей обработки
         resBody = getDataFromJSON(responseJSON)
-        val token = resBody.substringAfter("<html>\n" +
-                "  <body>")
-        val token1 = token.substringBefore("</html>")
-        environment.authToken = token1
+        environment.authToken = "Bearer $resBody"
         println(environment.authToken)
-    }
 
+        // headers["authorization"] = resBody
+
+    }
 
 }

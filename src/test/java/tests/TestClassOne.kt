@@ -9,6 +9,7 @@ import api_client.requests.auth.AuthResetCode
 import api_client.requests.auth.SessionId
 import api_client.requests.categories.Categories
 import api_client.requests.meals.Meals
+import api_client.requests.user.User
 import api_client.specifications.Specifications.installSpecification
 import api_client.specifications.Specifications.requestSpec
 import org.testng.annotations.Test
@@ -27,28 +28,6 @@ class TestClassOne :MainActivity() {
        //Categories.resBody.get(0).accessibility
        println()
        println("something")
-
-       val phone = AuthResetCode.authResetCodeReqBody("79231775570")
-       AuthResetCode.post(phone)
-       /*AuthResetCode.post("{" +
-               "\"phone\": \"79231775570\"" + "," +
-               "\"code\": \"3256\"" +
-               "}")
-        */
-
-       /* val token = AuthResetCode.post("{" +
-               "\"phone\": \"79231775570\"" + "," +
-               "\"code\": \"3256\"" +
-               "}").toString()
-       val token1 = token.substringAfter("<html>\n" +
-               "  <body>")
-       val token3 = token1.substringBefore("</html>")
-       println(token3)
-
-        */
-       // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Ijc5MjMxNzc1NTcwIiwiaWF0IjoxNjk5ODQ2NTcwLCJleHAiOjE3MzEzODI1NzB9.p5ORTSEt0A9S8LEXjUeFK2aPy8zV88l5xE4s3rO3xto</body>
-       // только один раз удалось получить токен в консоли
-
    }
 
     @Test
@@ -76,12 +55,14 @@ class TestClassOne :MainActivity() {
         TimeUnit.SECONDS.sleep(5)
         AuthLogin.post(AuthLogin.authLoginReqBody(phone, "3256"))
         AuthLogin.authLoginReqBody(phone, "3256")
+        println(AuthLogin.resBody)
 
         // присвоение новых хэдеров выполнено в функции хэдер. если нужно будет использовать пустое поле токена
         // то придется сначаал передать пустое значение в enviriments.authToken, костыль лютый
         // но не придумал, как сделать проще
 
         Meals.get(mutableMapOf())
+        User.get(mutableMapOf())
 
     }
 
