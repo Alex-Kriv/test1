@@ -10,7 +10,7 @@ import io.restassured.response.Response
 
 object User : Get, Res, UserPojo() {
 
-    override lateinit var resBody: String
+    override lateinit var resBody: UserPojoRes
     override fun getDataFromJSON(response: Response): UserPojoRes {
         val jsonString = response.asString()
         val gson = Gson()
@@ -24,7 +24,7 @@ object User : Get, Res, UserPojo() {
             endPoint = Environment.endPoints.user,
             responseType = ResponseType.JSON
         )
-        resBody = getDataFromJSON(responseJSON).toString()
+        resBody = getDataFromJSON(responseJSON)
     }
 
 }

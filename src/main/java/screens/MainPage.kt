@@ -54,6 +54,25 @@ object MainPage {
         )
     }
 
+    fun clickKruasanButton(){
+        clickToElement(
+            kruasanButton.androidXPath, LocatorType.XPATH,
+            kruasanButton.iosClassChain, LocatorType.IOS_CLASS_CHAIN,
+            elementName = kruasanButton.elementName
+        )
+    }
+
+    fun setNewSnackButton(newLocator: String){
+        snacksButton.androidAccessibilityId = newLocator
+        snacksButton.iosAccessibilityId = newLocator
+    }
+
+    fun setKruasanButtom(locator: Int) {
+        kruasanButton.androidXPath = "//android.widget.ImageView[@content-desc=\"${locator} ₽\"]"
+        kruasanButton.iosClassChain = "**/XCUIElementTypeImage[`label == \"${locator} ₽\"`]"
+    }
+
+
     private val mainPageButton = ScreenConstructor(
         androidXPath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.widget.ImageView[2]",
         iosXPath = "//XCUIElementTypeApplication[@name=\"School\"]/XCUIElementTypeWindow/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeOther[2]/XCUIElementTypeImage[2]",
@@ -61,11 +80,19 @@ object MainPage {
         elementName = "Кнопка возвращения на главный экран"
     )
 
-    private val snacksButton = ScreenConstructor(
-        androidAccessibilityId = "Закуски",
-        iosAccessibilityId = "Закуски",
+    val snacksButton = ScreenConstructor(
+        androidAccessibilityId = "",
+        iosAccessibilityId = "",
         iosPredicateString = "label == \"Закуски\"",
         elementName = "Выбор подраздела \"Закуски\"",
+    )
+
+    val kruasanButton = ScreenConstructor(
+        androidAccessibilityId = "222 ₽",
+        iosAccessibilityId = "222 ₽",
+        androidXPath = "",
+        iosClassChain = "",
+        elementName = "Стоимость круассана"
     )
 
     private val soupsButton = ScreenConstructor(

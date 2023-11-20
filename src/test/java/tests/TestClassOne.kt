@@ -3,7 +3,6 @@ package tests
 import MainActivity
 import api_client.environment.Environment
 import api_client.environment.Environment.environment
-import api_client.pojo.auth.AuthResetCodePojo
 import api_client.requests.auth.AuthLogin
 import api_client.requests.auth.AuthResetCode
 import api_client.requests.auth.SessionId
@@ -12,7 +11,17 @@ import api_client.requests.meals.Meals
 import api_client.requests.user.User
 import api_client.specifications.Specifications.installSpecification
 import api_client.specifications.Specifications.requestSpec
+import general_cases_for_tests.AuthorizationScenarios.checkAuthorizationUser
 import org.testng.annotations.Test
+import screens.AddressPage
+import screens.AddressPage.fullAddress
+import screens.AddressPage.unionAddress
+import screens.MainPage
+import screens.MainPage.clickKruasanButton
+import screens.MainPage.clickSnacksButton
+import screens.MainPage.setKruasanButtom
+import screens.MainPage.setNewSnackButton
+import screens.Profile
 import java.util.concurrent.TimeUnit
 
 
@@ -23,47 +32,107 @@ class TestClassOne :MainActivity() {
    fun testOne(){
 
        installSpecification(requestSpec(environment.host))
+       SessionId.get(mutableMapOf())
+       TimeUnit.SECONDS.sleep(5)
 
+       val phone = AuthResetCode.authResetCodeReqBody("79231775570").phone
+       AuthResetCode.post(AuthResetCode.authResetCodeReqBody("79231775570"))
+
+       TimeUnit.SECONDS.sleep(5)
+
+       AuthLogin.post(AuthLogin.authLoginReqBody(phone, "3256"))
+       AuthLogin.authLoginReqBody(phone, "3256")
+       println(AuthLogin.resBody)
+
+       // присвоение новых хэдеров выполнено в функции хэдер. если нужно будет использовать пустое поле токена
+       // то придется сначаал передать пустое значение в enviriments.authToken, костыль лютый
+       // но не придумал, как сделать проще
+       // можно сразу в функции гет,пост задать значение хэдера по типу headers["authorization"] = resBody
        Categories.get(mutableMapOf())
-       //Categories.resBody.get(0).accessibility
-       println()
-       println("something")
+       Meals.get(mutableMapOf())
+       User.get(mutableMapOf())
+
+
    }
 
     @Test
     fun testTwo(){
         // получение токена и обращение к auth/login
-        installSpecification(requestSpec(environment.host))
-        println(environment.authToken)
-        val reqBodyForAuth = AuthLogin.authLoginReqBody("79231775570", "3256")
+
+        val getCodeOfCategory = Categories.resBody[1].code
+        setNewSnackButton(Categories.resBody[1].name.toString())
+        clickSnacksButton()
         TimeUnit.SECONDS.sleep(5)
-        val token = AuthLogin.post(reqBodyForAuth).toString() // получил токен, но почему-то вконце остается kotlin.unit
-        Environment.environment.authToken = token.substringBefore("kotlin.Unit")
-        println(environment.authToken)
+        println(Meals.resBody.size)
+
+        for (i in 0..Meals.resBody.size){
+            if (Meals.resBody[i].categories.contains(getCodeOfCategory)) {
+                Meals.resBody[i].price?.let { setKruasanButtom(it) } // почему-то с accessibilityId не стало работать
+                break
+            }
+        }
+        TimeUnit.SECONDS.sleep(5)
+        clickKruasanButton()
+        TimeUnit.SECONDS.sleep(5)
+
     }
 
     @Test
     fun testThree(){
 
-        installSpecification(requestSpec(environment.host))
-        SessionId.get(mutableMapOf())
-        TimeUnit.SECONDS.sleep(5)
+        println("Запущен тест 6. Добавление/удаление адреса")
 
-        val phone = AuthResetCode.authResetCodeReqBody("79231775570").phone
-        AuthResetCode.post(AuthResetCode.authResetCodeReqBody("79231775570"))
+        val profilePage = Profile
+        val mainPage = MainPage
+        val addressPage = AddressPage
 
-        TimeUnit.SECONDS.sleep(5)
-        AuthLogin.post(AuthLogin.authLoginReqBody(phone, "3256"))
-        AuthLogin.authLoginReqBody(phone, "3256")
-        println(AuthLogin.resBody)
+        val needAuthorizationUser: Boolean = true
+        TimeUnit.SECONDS.sleep(4)
+        checkAuthorizationUser(needAuthorizationUser)
 
-        // присвоение новых хэдеров выполнено в функции хэдер. если нужно будет использовать пустое поле токена
-        // то придется сначаал передать пустое значение в enviriments.authToken, костыль лютый
-        // но не придумал, как сделать проще
-        // можно сразу в функции гет,пост задать значение хэдера по типу headers["authorization"] = resBody
+        // веленский пеереулок 6
+        profilePage.clickProfileButton() // переход в окно профиля
 
-        Meals.get(mutableMapOf())
-        User.get(mutableMapOf())
+        addressPage.clickAddressButton() // нажать на кнопку мои адреса
+
+        addressPage.checkAddressInPageAndThenDelete(User.resBody)// поиск локатора из джейсона и удаление
+
+        addressPage.clickAddNewAddress() // нажать на кнопку добавить нвоый адрес
+
+        try {
+            addressPage.clickPopUpPage() // проверка всплывающего окна
+            TimeUnit.SECONDS.sleep(1)
+        }
+        catch (err:org.openqa.selenium.NoSuchElementException){
+            println("Всплывающееее окно не появилось")
+            //println(err.cause)
+        }
+
+        addressPage.clickAddNewAddressSecond()
+
+        TimeUnit.SECONDS.sleep(5) // почему-то более или менее стабильно работает с этими паузами
+
+        addressPage.writeAddressInAddressTextBox()
+        TimeUnit.SECONDS.sleep(1) // почему-то более или менее стабильно работает с этими паузами, но не всегда
+
+        addressPage.writeApartNumber()
+
+        addressPage.writEntrance()
+
+        addressPage.writeIntercom()
+
+        addressPage.writeFloor()
+
+        addressPage.writeCommentAddress()
+
+        addressPage.clickSaveAddressButton()
+        TimeUnit.SECONDS.sleep(2)
+
+        //swipeOnScreen(startCordX = 568, startCordY = 160, moveCordX = 600, moveCordY = 1200)
+        addressPage.findCoordinatesForExitMyAddressPage()
+
+        TimeUnit.SECONDS.sleep(4)
+        mainPage.clickMainPageButton()
 
     }
 

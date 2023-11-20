@@ -4,6 +4,7 @@ import api_client.Post
 import api_client.Res
 import api_client.environment.Environment.endPoints
 import api_client.environment.Environment.environment
+import api_client.environment.Environment.headers
 import api_client.pojo.auth.AuthLoginPojo
 import io.restassured.response.Response
 
@@ -30,10 +31,8 @@ object AuthLogin : Post, Res, AuthLoginPojo() {
         // перенос ответа по классам для дальнейшей обработки
         resBody = getDataFromJSON(responseJSON)
         environment.authToken = "Bearer $resBody"
-        println(environment.authToken)
 
-        // headers["authorization"] = resBody
-
+        headers["authorization"] = resBody
     }
 
 }

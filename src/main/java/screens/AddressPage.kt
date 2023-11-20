@@ -11,6 +11,7 @@ import TestFunctions.platformCheck
 import TestFunctions.sendText
 import TestFunctions.swipeOnScreen
 import TestFunctions.tapByCoordinates
+import api_client.pojo.user.UserPojo
 import users.TestUser
 import java.util.concurrent.TimeUnit
 
@@ -24,18 +25,70 @@ object AddressPage {
         )
     }
 
-    fun checkAddressInPageAndThenDelete(){
+    fun unionAddress(){
+        fullAddress.androidAccessibilityId = "${streetFromJson.androidAccessibilityId}\n" +
+                "кв ${flatFromJson.androidAccessibilityId}, ${entranceFromJson.androidAccessibilityId} подъезд, " +
+                "${floorFromJson.androidAccessibilityId} этаж. Домофон: ${intercomFromJson.androidAccessibilityId}. " +
+                commentFromJson.androidAccessibilityId
+        fullAddress.iosAccessibilityId = "${streetFromJson.iosAccessibilityId}\n" +
+                "кв ${flatFromJson.iosAccessibilityId}, ${entranceFromJson.iosAccessibilityId} подъезд, " +
+                "${flatFromJson.iosAccessibilityId} этаж. Домофон: ${intercomFromJson.iosAccessibilityId}. " +
+                commentFromJson.iosAccessibilityId
+    }
+
+    val fullAddress = ScreenConstructor (
+        androidAccessibilityId = "",
+        iosAccessibilityId = "",
+        elementName = "Мой полный адрес"
+
+    )
+    fun checkAddressInPageAndThenDelete(resBody: UserPojo.UserPojoRes){
         try {
+
+            println(resBody.addresses.size)
+            println("Почему находит три обьекта???")
+            println(resBody.addresses[0])
+            TimeUnit.SECONDS.sleep(15)
+            for (i in 0..resBody.addresses.size - 1) {
+                if (resBody.addresses[i].street == "Сапёрный переулок, 20"){
+
+                    streetFromJson.androidAccessibilityId = resBody.addresses[i].street.toString()
+                    streetFromJson.iosAccessibilityId = resBody.addresses[i].street.toString()
+
+                    entranceFromJson.androidAccessibilityId = resBody.addresses[i].entrance.toString()
+                    entranceFromJson.iosAccessibilityId = resBody.addresses[i].entrance.toString()
+
+                    flatFromJson.androidAccessibilityId = resBody.addresses[i].flat.toString()
+                    flatFromJson.iosAccessibilityId = resBody.addresses[i].flat.toString()
+
+                    floorFromJson.androidAccessibilityId = resBody.addresses[i].floor.toString()
+                    floorFromJson.iosAccessibilityId = resBody.addresses[i].floor.toString()
+
+                    intercomFromJson.androidAccessibilityId = resBody.addresses[i].doorphone.toString()
+                    intercomFromJson.iosAccessibilityId = resBody.addresses[i].doorphone.toString()
+
+                    commentFromJson.androidAccessibilityId = resBody.addresses[i].comment.toString()
+                    commentFromJson.iosAccessibilityId = resBody.addresses[i].comment.toString()
+
+                    unionAddress()
+
+                    println(fullAddress.androidAccessibilityId)
+                    println(checkAddressInPage.androidAccessibilityId)
+
+                    break
+                }
+            }
+
             // вставить сюда функцию проверки платформы, вернуть пару локатор/тип локатора и вставить их в файндЭлемент
             val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
-                checkAddressInPage.androidAccessibilityId, LocatorType.ACCESSIBILITY_ID,
-                checkAddressInPage.iosAccessibilityId, LocatorType.ACCESSIBILITY_ID
+                fullAddress.androidAccessibilityId, LocatorType.ACCESSIBILITY_ID,
+                fullAddress.iosAccessibilityId, LocatorType.ACCESSIBILITY_ID
             )
             findElement(finalLocator, finalLocatorType)
 
             val (cordX, cordY, newCordX) = coordinateCalc(
-                checkAddressInPage.androidAccessibilityId, LocatorType.ACCESSIBILITY_ID,
-                checkAddressInPage.iosAccessibilityId, LocatorType.ACCESSIBILITY_ID
+                fullAddress.androidAccessibilityId, LocatorType.ACCESSIBILITY_ID,
+                fullAddress.iosAccessibilityId, LocatorType.ACCESSIBILITY_ID
             )
             println(" полученные координаты $cordX , $cordY, $newCordX")
             swipeOnScreen(startCordX = cordX, startCordY = cordY, moveCordX = newCordX, moveCordY = cordY+5)
@@ -280,6 +333,42 @@ object AddressPage {
         iosAccessibilityId = "Сапёрный переулок, 20\n" +
                 "кв 23, 2 подъезд, 6 этаж. Домофон: 4466. Комментарий",
         elementName = "Проврка добавлен ли установленный адрес",
+    )
+
+    private val streetFromJson = ScreenConstructor(
+        androidAccessibilityId = "",
+        iosAccessibilityId = "",
+        elementName = "Адресс"
+    )
+
+    private val flatFromJson = ScreenConstructor(
+        androidAccessibilityId = "",
+        iosAccessibilityId = "",
+        elementName = "Квартира"
+
+    )
+    private val floorFromJson = ScreenConstructor(
+        androidAccessibilityId = "",
+        iosAccessibilityId = "",
+        elementName = "Этаж"
+    )
+
+    private val entranceFromJson = ScreenConstructor(
+        androidAccessibilityId = "",
+        iosAccessibilityId = "",
+        elementName = "Подьезд"
+    )
+
+    private val intercomFromJson = ScreenConstructor(
+        androidAccessibilityId = "",
+        iosAccessibilityId = "",
+        elementName = "Домофон"
+    )
+
+    private val commentFromJson = ScreenConstructor(
+        androidAccessibilityId = "",
+        iosAccessibilityId = "",
+        elementName = "комментарий",
     )
 
     private val deleteAddressButton = ScreenConstructor(

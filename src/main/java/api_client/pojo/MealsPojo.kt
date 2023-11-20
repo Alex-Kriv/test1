@@ -48,6 +48,7 @@ open class MealsPojo {
         @SerializedName("toppings") var toppings: ArrayList<Toppings> = arrayListOf()
     )
 
+
     data class Toppings(
         @SerializedName("images") var images: ArrayList<String> = arrayListOf(),
         @SerializedName("code") var code: String? = null,

@@ -5,6 +5,7 @@ import api_client.Res
 import api_client.environment.Environment
 import api_client.environment.Environment.endPoints
 import api_client.environment.Environment.environment
+import api_client.environment.Environment.headers
 import io.restassured.response.Response
 
 object SessionId : Get, Res  {
@@ -24,8 +25,8 @@ object SessionId : Get, Res  {
 
         )
         resBody = getDataFromJSON(responseJSON)
-        environment.sessionId = resBody
-        println(environment.sessionId)
+        headers["sessionid"] = resBody
+
     }
 
 }

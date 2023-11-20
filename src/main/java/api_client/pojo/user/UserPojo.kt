@@ -9,7 +9,7 @@ open class UserPojo {
         @SerializedName("session") var session: String? = null,
         @SerializedName("phoneStatus") var phoneStatus: String? = null,
         @SerializedName("addresses") var addresses: ArrayList<Addresses> = arrayListOf(),
-        @SerializedName("order") var order: String? = null,
+        @SerializedName("order") var order: Any? = null,
         @SerializedName("wallet") var wallet: ArrayList<String> = arrayListOf(),
         @SerializedName("bonuses") var bonuses: Int? = null,
         @SerializedName("instagram") var instagram: String? = null,
@@ -19,12 +19,13 @@ open class UserPojo {
         @SerializedName("bonusProgram") var bonusProgram: String? = null
     )
 
+
     data class Addresses(
 
         @SerializedName("code") var code: Int? = null,
         @SerializedName("street") var street: String? = null,
         @SerializedName("flat") var flat: String? = null,
-        @SerializedName("floor") var floor: Int? = null,
+        @SerializedName("floor") var floor: String? = null,
         @SerializedName("entrance") var entrance: String? = null,
         @SerializedName("doorphone") var doorphone: String? = null,
         @SerializedName("comment") var comment: String? = null,
