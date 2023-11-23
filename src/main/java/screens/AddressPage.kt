@@ -25,24 +25,25 @@ object AddressPage {
         )
     }
 
-    fun unionAddress(){
-        fullAddress.androidAccessibilityId = "${streetFromJson.androidAccessibilityId}\n" +
-                "кв ${flatFromJson.androidAccessibilityId}, ${entranceFromJson.androidAccessibilityId} подъезд, " +
-                "${floorFromJson.androidAccessibilityId} этаж. Домофон: ${intercomFromJson.androidAccessibilityId}. " +
-                commentFromJson.androidAccessibilityId
-        fullAddress.iosAccessibilityId = "${streetFromJson.iosAccessibilityId}\n" +
-                "кв ${flatFromJson.iosAccessibilityId}, ${entranceFromJson.iosAccessibilityId} подъезд, " +
-                "${flatFromJson.iosAccessibilityId} этаж. Домофон: ${intercomFromJson.iosAccessibilityId}. " +
-                commentFromJson.iosAccessibilityId
+    fun unionAddress(street: String, flat: String, floor: String,
+                     entranse: String, doorphone: String, comment: String){
+        fullAddress.androidAccessibilityId = "${street}\n" +
+                "кв ${flat}, ${entranse} подъезд, " +
+                "${floor} этаж. Домофон: ${doorphone}. " +
+                comment
+        fullAddress.iosAccessibilityId = "${street}\n" +
+        "кв ${flat}, ${entranse} подъезд, " +
+                "${floor} этаж. Домофон: ${doorphone}. " +
+                comment
     }
 
     val fullAddress = ScreenConstructor (
-        androidAccessibilityId = "",
-        iosAccessibilityId = "",
+        androidAccessibilityId = "1",
+        iosAccessibilityId = "1",
         elementName = "Мой полный адрес"
 
     )
-    fun checkAddressInPageAndThenDelete(resBody: UserPojo.UserPojoRes){
+    fun checkAddressInPageAndThenDelete(resBody: UserPojo.UserPojoRes, findElementWithoutCatching: Boolean = false){
         try {
 
             println(resBody.addresses.size)
@@ -51,44 +52,30 @@ object AddressPage {
             TimeUnit.SECONDS.sleep(15)
             for (i in 0..resBody.addresses.size - 1) {
                 if (resBody.addresses[i].street == "Сапёрный переулок, 20"){
-
-                    streetFromJson.androidAccessibilityId = resBody.addresses[i].street.toString()
-                    streetFromJson.iosAccessibilityId = resBody.addresses[i].street.toString()
-
-                    entranceFromJson.androidAccessibilityId = resBody.addresses[i].entrance.toString()
-                    entranceFromJson.iosAccessibilityId = resBody.addresses[i].entrance.toString()
-
-                    flatFromJson.androidAccessibilityId = resBody.addresses[i].flat.toString()
-                    flatFromJson.iosAccessibilityId = resBody.addresses[i].flat.toString()
-
-                    floorFromJson.androidAccessibilityId = resBody.addresses[i].floor.toString()
-                    floorFromJson.iosAccessibilityId = resBody.addresses[i].floor.toString()
-
-                    intercomFromJson.androidAccessibilityId = resBody.addresses[i].doorphone.toString()
-                    intercomFromJson.iosAccessibilityId = resBody.addresses[i].doorphone.toString()
-
-                    commentFromJson.androidAccessibilityId = resBody.addresses[i].comment.toString()
-                    commentFromJson.iosAccessibilityId = resBody.addresses[i].comment.toString()
-
-                    unionAddress()
-
+                    unionAddress(
+                        resBody.addresses[i].street.toString(),
+                        resBody.addresses[i].flat.toString(),
+                        resBody.addresses[i].floor.toString(),
+                        resBody.addresses[i].entrance.toString(),
+                        resBody.addresses[i].doorphone.toString(),
+                        resBody.addresses[i].comment.toString()
+                    )
+                    println(111)
                     println(fullAddress.androidAccessibilityId)
                     println(checkAddressInPage.androidAccessibilityId)
-
+                    println(1221)
                     break
                 }
             }
 
-            // вставить сюда функцию проверки платформы, вернуть пару локатор/тип локатора и вставить их в файндЭлемент
             val (finalLocator: String, finalLocatorType: LocatorType) = platformCheck(
                 fullAddress.androidAccessibilityId, LocatorType.ACCESSIBILITY_ID,
                 fullAddress.iosAccessibilityId, LocatorType.ACCESSIBILITY_ID
             )
-            findElement(finalLocator, finalLocatorType)
+            val element = findElement(finalLocator, finalLocatorType,findElementWithoutCatching)
 
             val (cordX, cordY, newCordX) = coordinateCalc(
-                fullAddress.androidAccessibilityId, LocatorType.ACCESSIBILITY_ID,
-                fullAddress.iosAccessibilityId, LocatorType.ACCESSIBILITY_ID
+                element
             )
             println(" полученные координаты $cordX , $cordY, $newCordX")
             swipeOnScreen(startCordX = cordX, startCordY = cordY, moveCordX = newCordX, moveCordY = cordY+5)
@@ -108,11 +95,12 @@ object AddressPage {
         )
     }
 
-    fun clickPopUpPage(){
+    fun clickPopUpPage(findElementWithoutCatching: Boolean = false){
         clickToElement(
             popUpPage.androidXPath, LocatorType.XPATH,
             popUpPage.iosXPath, LocatorType.XPATH,
-            elementName = popUpPage.elementName
+            elementName = popUpPage.elementName,
+            findElementWithoutCatching = findElementWithoutCatching
         )
     }
 
@@ -231,11 +219,13 @@ object AddressPage {
     fun findCoordinatesForExitMyAddressPage(){
         val (cordXLocation, cordXWidth) = coordinateCalcForX(
             myAddressPage.androidXPath, LocatorType.XPATH,
-            myAddressPage.iosXPath, LocatorType.XPATH
+            myAddressPage.iosXPath, LocatorType.XPATH,
+            elementName = "Вычисление координат х для закрытия окна адреса"
         )
         val (cordYLocation, cordYHeight) = coordinateCalcForY(
             myAddressPage.androidXPath, LocatorType.XPATH,
-            myAddressPage.iosXPath, LocatorType.XPATH
+            myAddressPage.iosXPath, LocatorType.XPATH,
+            elementName = "Вычисление координат х для закрытия окна адреса",
         )
         val startCordX = cordXLocation + cordXWidth / 2
         val startCordY = cordYLocation + cordYHeight / 15

@@ -42,7 +42,7 @@ object StartMainPage {
         val onboarding = Onboarding
         try {
 
-            onboarding.clickSelectRusButton()
+            onboarding.clickSelectRusButton(true)
             onboarding.clickNextButton()
 
             try { // не работает при типе локатора DEFAULT, lateinit property element has not been initialized

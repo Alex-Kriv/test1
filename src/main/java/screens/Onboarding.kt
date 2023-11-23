@@ -4,13 +4,14 @@ import TestFunctions.clickToElement
 
 object Onboarding {
 
-    fun clickSelectRusButton() {
+    fun clickSelectRusButton(findElementWithoutCatching: Boolean = false) {
         clickToElement(
-            locatorAndroid = locatorMap[OnboardingElements.SELECT_RUS_BUTTON_ANDROID].toString(),
+            locatorAndroid = "Русский",
             locatorTypeAndroid = LocatorType.ACCESSIBILITY_ID,
-            locatorIOS = locatorMap[OnboardingElements.SELECT_RUS_BUTTON_IOS].toString(),
+            locatorIOS = "Русский",
             locatorTypeIOS = LocatorType.ACCESSIBILITY_ID,
-            elementName = locatorMap[OnboardingElements.SELECT_RUS_BUTTON_ELEMENT_NAME].toString(),
+            elementName = "Вывод русскоко языка на экране онбординга",
+            findElementWithoutCatching = findElementWithoutCatching
         )
     }
 
@@ -34,13 +35,14 @@ object Onboarding {
         )
     }
 
-    fun clickNextButton(){
+    fun clickNextButton(findElementWithoutCatching: Boolean = false){
         clickToElement(
             locatorAndroid = locatorMap[OnboardingElements.NEXT_BUTTON_ANDROID].toString(),
             locatorTypeAndroid = LocatorType.ACCESSIBILITY_ID,
             locatorIOS = locatorMap[OnboardingElements.NEXT_BUTTON_IOS].toString(),
             locatorTypeIOS = LocatorType.ACCESSIBILITY_ID,
             elementName = locatorMap[OnboardingElements.NEXT_BUTTON_ELEMENT_NAME].toString(),
+            findElementWithoutCatching = findElementWithoutCatching
         )
     }
 

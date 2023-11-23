@@ -1,6 +1,7 @@
 package tests
 
 import MainActivity
+import TestFunctions.tapByCoordinates
 import api_client.environment.Environment
 import api_client.environment.Environment.environment
 import api_client.requests.auth.AuthLogin
@@ -12,23 +13,22 @@ import api_client.requests.user.User
 import api_client.specifications.Specifications.installSpecification
 import api_client.specifications.Specifications.requestSpec
 import general_cases_for_tests.AuthorizationScenarios.checkAuthorizationUser
+import io.qameta.allure.Description
 import org.testng.annotations.Test
-import screens.AddressPage
+import screens.*
 import screens.AddressPage.fullAddress
 import screens.AddressPage.unionAddress
-import screens.MainPage
 import screens.MainPage.clickKruasanButton
 import screens.MainPage.clickSnacksButton
 import screens.MainPage.setKruasanButtom
 import screens.MainPage.setNewSnackButton
-import screens.Profile
 import java.util.concurrent.TimeUnit
 
 
 class TestClassOne :MainActivity() {
 
-
-   @Test
+    @Description("Тест на прохождение авторизации и получения sessionId, authToken")
+    @Test(description = "Работа с API")
    fun testOne(){
 
        installSpecification(requestSpec(environment.host))
@@ -44,10 +44,6 @@ class TestClassOne :MainActivity() {
        AuthLogin.authLoginReqBody(phone, "3256")
        println(AuthLogin.resBody)
 
-       // присвоение новых хэдеров выполнено в функции хэдер. если нужно будет использовать пустое поле токена
-       // то придется сначаал передать пустое значение в enviriments.authToken, костыль лютый
-       // но не придумал, как сделать проще
-       // можно сразу в функции гет,пост задать значение хэдера по типу headers["authorization"] = resBody
        Categories.get(mutableMapOf())
        Meals.get(mutableMapOf())
        User.get(mutableMapOf())
@@ -55,15 +51,13 @@ class TestClassOne :MainActivity() {
 
    }
 
-    @Test
+    @Description("Поиск и нажатие на первое блюдо из категории закуски")
+    @Test(description = "Работа с API")
     fun testTwo(){
-        // получение токена и обращение к auth/login
-
         val getCodeOfCategory = Categories.resBody[1].code
         setNewSnackButton(Categories.resBody[1].name.toString())
         clickSnacksButton()
         TimeUnit.SECONDS.sleep(5)
-        println(Meals.resBody.size)
 
         for (i in 0..Meals.resBody.size){
             if (Meals.resBody[i].categories.contains(getCodeOfCategory)) {
@@ -77,10 +71,9 @@ class TestClassOne :MainActivity() {
 
     }
 
-    @Test
+    @Description("Добавление и удаление адреса в профиле")
+    @Test(description = "Работа с адресом")
     fun testThree(){
-
-        println("Запущен тест 6. Добавление/удаление адреса")
 
         val profilePage = Profile
         val mainPage = MainPage
@@ -91,29 +84,28 @@ class TestClassOne :MainActivity() {
         checkAuthorizationUser(needAuthorizationUser)
 
         // веленский пеереулок 6
-        profilePage.clickProfileButton() // переход в окно профиля
+        profilePage.clickProfileButton()
 
-        addressPage.clickAddressButton() // нажать на кнопку мои адреса
+        addressPage.clickAddressButton()
 
-        addressPage.checkAddressInPageAndThenDelete(User.resBody)// поиск локатора из джейсона и удаление
+        addressPage.checkAddressInPageAndThenDelete(User.resBody, true)
 
-        addressPage.clickAddNewAddress() // нажать на кнопку добавить нвоый адрес
+        addressPage.clickAddNewAddress()
 
         try {
-            addressPage.clickPopUpPage() // проверка всплывающего окна
+            addressPage.clickPopUpPage(true)
             TimeUnit.SECONDS.sleep(1)
         }
         catch (err:org.openqa.selenium.NoSuchElementException){
             println("Всплывающееее окно не появилось")
-            //println(err.cause)
         }
 
         addressPage.clickAddNewAddressSecond()
 
-        TimeUnit.SECONDS.sleep(5) // почему-то более или менее стабильно работает с этими паузами
+        TimeUnit.SECONDS.sleep(5)
 
         addressPage.writeAddressInAddressTextBox()
-        TimeUnit.SECONDS.sleep(1) // почему-то более или менее стабильно работает с этими паузами, но не всегда
+        TimeUnit.SECONDS.sleep(1)
 
         addressPage.writeApartNumber()
 
@@ -128,7 +120,6 @@ class TestClassOne :MainActivity() {
         addressPage.clickSaveAddressButton()
         TimeUnit.SECONDS.sleep(2)
 
-        //swipeOnScreen(startCordX = 568, startCordY = 160, moveCordX = 600, moveCordY = 1200)
         addressPage.findCoordinatesForExitMyAddressPage()
 
         TimeUnit.SECONDS.sleep(4)
@@ -136,10 +127,10 @@ class TestClassOne :MainActivity() {
 
     }
 
- /*   @Test
+    @Description("Изменение и проверка корректности личных данных")
+    @Test(description = "Работа с окном введения данных")
 
-    fun testOne() {
-        println("Тест задание 1. Изменение и проверка корректности личных данных")
+    fun testFour() {
 
         val profile = Profile
         val userDataPage = UserDataPage
@@ -175,9 +166,10 @@ class TestClassOne :MainActivity() {
         TimeUnit.SECONDS.sleep(10)
     }
 
-    @Test
-    fun testTwo(){
-        println("Тест задание 2. Проверка элементов футера \"Главная страница\", \"Профиль\", \"Меню\".")
+
+    @Description("Проверка элементов футера \"Главная страница\", \"Профиль\", \"Меню\".")
+    @Test(description = "Работа с элементами главного экрана")
+    fun testFive(){
 
         val profilePage = Profile
         val menuPage = MenuPage
@@ -192,14 +184,12 @@ class TestClassOne :MainActivity() {
 
         mainPage.clickMainPageButton()
 
-        TimeUnit.SECONDS.sleep(5)
-        println("Тест 2 успешно завершен")
-        TimeUnit.SECONDS.sleep(5)
+        TimeUnit.SECONDS.sleep(10)
     }
 
-    @Test
-
-    fun testThree(){
+    @Description("Проверка боксов \"Закуски\", \"Супы\", \"Паста\", \"Сендвичи\", \"Горячее\".")
+    @Test(description = "Работа с элементами экрана \"Главная страница\"")
+    fun testSix(){
         println("Тест задание 3. Проверка боксов \"Закуски\", \"Супы\", \"Паста\", \"Сендвичи\", \"Горячее\".")
 
         val mainPage = MainPage
@@ -221,15 +211,12 @@ class TestClassOne :MainActivity() {
 
         mainPage.clickMainPageButton()
 
-        println("Тест 3 завершен успешно")
-
-        TimeUnit.SECONDS.sleep(5) // на всякий случай, не уверен что в этом есть необходимость
+        TimeUnit.SECONDS.sleep(5)
     }
 
-    @Test
-    // тест прохождения авторизации
-    fun testFour(){
-        println("Тест задание 4. Прохождение авторизации, выход из профиля и возврат к начальному экрану")
+    @Description("Прохождение авторизации, выход из профиля и возврат к начальному экрану")
+    @Test(description = "Выполнение авторизации")
+    fun testSeven(){
 
         val profilePage = Profile
         val mainPage = MainPage
@@ -251,14 +238,12 @@ class TestClassOne :MainActivity() {
 
         mainPage.clickMainPageButton()
 
-        println("Тест 4 успешно завершен")
         TimeUnit.SECONDS.sleep(5)
     }
 
-    @Test
-    // тест при зарегестрированном пользователе для проверки
-    fun testFive(){
-        println("Тест задание 5. Способ оплаты, выход из профиля и возврат к начальному экрану")
+    @Description("Способ оплаты, выход из профиля и возврат к начальному экрану")
+    @Test(description = "Проверка работы функции нажатия на экран")
+    fun testEight(){
 
         val profilePage = Profile
         val mainPage = MainPage
@@ -276,68 +261,6 @@ class TestClassOne :MainActivity() {
         profilePage.clickExitButton()
 
         mainPage.clickMainPageButton()
-
-        println("Тест 5 успешно завершен")
         TimeUnit.SECONDS.sleep(5)
     }
-
-    @Test
-    fun testSix(){
-        println("Запущен тест 6. Добавление/удаление адреса")
-
-        val profilePage = Profile
-        val mainPage = MainPage
-        val addressPage = AddressPage
-
-        val needAuthorizationUser: Boolean = true
-        TimeUnit.SECONDS.sleep(4)
-        checkAuthorizationUser(needAuthorizationUser)
-
-        // веленский пеереулок 6
-        profilePage.clickProfileButton() // переход в окно профиля
-
-        addressPage.clickAddressButton() // нажать на кнопку мои адреса
-
-        addressPage.checkAddressInPageAndThenDelete()
-
-        addressPage.clickAddNewAddress() // нажать на кнопку добавить нвоый адрес
-
-        try {
-            addressPage.clickPopUpPage() // проверка всплывающего окна
-            TimeUnit.SECONDS.sleep(1)
-        }
-        catch (err:org.openqa.selenium.NoSuchElementException){
-            println("Всплывающееее окно не появилось")
-            //println(err.cause)
-        }
-
-        addressPage.clickAddNewAddressSecond()
-
-        TimeUnit.SECONDS.sleep(5) // почему-то более или менее стабильно работает с этими паузами
-
-        addressPage.writeAddressInAddressTextBox()
-        TimeUnit.SECONDS.sleep(1) // почему-то более или менее стабильно работает с этими паузами, но не всегда
-
-        addressPage.writeApartNumber()
-
-        addressPage.writEntrance()
-
-        addressPage.writeIntercom()
-
-        addressPage.writeFloor()
-
-        addressPage.writeCommentAddress()
-
-        addressPage.clickSaveAddressButton()
-        TimeUnit.SECONDS.sleep(2)
-
-        //swipeOnScreen(startCordX = 568, startCordY = 160, moveCordX = 600, moveCordY = 1200)
-        addressPage.findCoordinatesForExitMyAddressPage()
-
-        TimeUnit.SECONDS.sleep(4)
-        mainPage.clickMainPageButton()
-    }
-
-
-  */
 }

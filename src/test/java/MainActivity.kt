@@ -28,7 +28,6 @@ open class MainActivity {
         paramDeviceName: String, paramUDID: String,
         paramTimeToSearchElement: Long, paramPathToApp: String
     ) {
-        // ну это как-то ужасно выглядит, уточнить как лучше сделать
         val capabilities = getCapabilities(
             paramPlatformName, paramPlatformVersion,
             paramDeviceName, paramUDID,
