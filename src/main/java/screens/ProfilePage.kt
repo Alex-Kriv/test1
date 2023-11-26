@@ -67,13 +67,14 @@ object Profile {
             elementName = sendCodeField.elementName)
     }
 
-    fun checkAvailableExitButton(): Boolean {
+    fun checkAvailableExitButton(findElementWithoutCatching: Boolean = false): Boolean {
         return checkAvailableElement(
             locatorAndroid = exitButton.androidAccessibilityId,
             locatorTypeAndroid = LocatorType.ACCESSIBILITY_ID,
             locatorIOS = exitButton.iosAccessibilityId,
             locatorTypeIOS = LocatorType.ACCESSIBILITY_ID,
-            elementName = exitButton.elementName
+            elementName = exitButton.elementName,
+            findElementWithoutCatching = findElementWithoutCatching
         )
     }
 

@@ -12,9 +12,8 @@
             <class name="tests.TestClassOne"/>
             <class name="tests.TestClassOne">
                 <methods>
-                    <include name="testOne"/>
-                    <include name="testTwo"/>
-                    <include name="testThree"/>
+
+                    <include name="testEight"/>
                 </methods>
             </class>
         </classes>

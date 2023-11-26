@@ -325,42 +325,6 @@ object AddressPage {
         elementName = "Проврка добавлен ли установленный адрес",
     )
 
-    private val streetFromJson = ScreenConstructor(
-        androidAccessibilityId = "",
-        iosAccessibilityId = "",
-        elementName = "Адресс"
-    )
-
-    private val flatFromJson = ScreenConstructor(
-        androidAccessibilityId = "",
-        iosAccessibilityId = "",
-        elementName = "Квартира"
-
-    )
-    private val floorFromJson = ScreenConstructor(
-        androidAccessibilityId = "",
-        iosAccessibilityId = "",
-        elementName = "Этаж"
-    )
-
-    private val entranceFromJson = ScreenConstructor(
-        androidAccessibilityId = "",
-        iosAccessibilityId = "",
-        elementName = "Подьезд"
-    )
-
-    private val intercomFromJson = ScreenConstructor(
-        androidAccessibilityId = "",
-        iosAccessibilityId = "",
-        elementName = "Домофон"
-    )
-
-    private val commentFromJson = ScreenConstructor(
-        androidAccessibilityId = "",
-        iosAccessibilityId = "",
-        elementName = "комментарий",
-    )
-
     private val deleteAddressButton = ScreenConstructor(
         androidAccessibilityId = "Удалить",
         androidXPath = "//android.widget.ImageView[@content-desc=\"Удалить\"]",

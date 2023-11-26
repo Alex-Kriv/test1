@@ -14,7 +14,7 @@ object AuthorizationScenarios {
         try {
 
             profilePage.clickProfileButton() // переход в окно профиля из начального экрана
-            userIsAuthorization = profilePage.checkAvailableExitButton() // проверка наличия кнопки "выход"
+            userIsAuthorization = profilePage.checkAvailableExitButton(true) // проверка наличия кнопки "выход"
 
         } catch (e: org.openqa.selenium.NoSuchElementException) {
             userIsAuthorization = false

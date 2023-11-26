@@ -81,8 +81,8 @@ object MainPage {
     )
 
     val snacksButton = ScreenConstructor(
-        androidAccessibilityId = "",
-        iosAccessibilityId = "",
+        androidAccessibilityId = "Закуски",
+        iosAccessibilityId = "Закуски",
         iosPredicateString = "label == \"Закуски\"",
         elementName = "Выбор подраздела \"Закуски\"",
     )

@@ -162,7 +162,6 @@ class TestClassOne :MainActivity() {
 
         mainPage.clickMainPageButton()
 
-        println("Тест 1 успешно завершен")
         TimeUnit.SECONDS.sleep(10)
     }
 
@@ -190,7 +189,6 @@ class TestClassOne :MainActivity() {
     @Description("Проверка боксов \"Закуски\", \"Супы\", \"Паста\", \"Сендвичи\", \"Горячее\".")
     @Test(description = "Работа с элементами экрана \"Главная страница\"")
     fun testSix(){
-        println("Тест задание 3. Проверка боксов \"Закуски\", \"Супы\", \"Паста\", \"Сендвичи\", \"Горячее\".")
 
         val mainPage = MainPage
 
