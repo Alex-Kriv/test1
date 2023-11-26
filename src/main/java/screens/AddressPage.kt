@@ -32,7 +32,7 @@ object AddressPage {
                 "${floor} этаж. Домофон: ${doorphone}. " +
                 comment
         fullAddress.iosAccessibilityId = "${street}\n" +
-        "кв ${flat}, ${entranse} подъезд, " +
+                "кв ${flat}, ${entranse} подъезд, " +
                 "${floor} этаж. Домофон: ${doorphone}. " +
                 comment
     }
@@ -46,9 +46,6 @@ object AddressPage {
     fun checkAddressInPageAndThenDelete(resBody: UserPojo.UserPojoRes, findElementWithoutCatching: Boolean = false){
         try {
 
-            println(resBody.addresses.size)
-            println("Почему находит три обьекта???")
-            println(resBody.addresses[0])
             TimeUnit.SECONDS.sleep(15)
             for (i in 0..resBody.addresses.size - 1) {
                 if (resBody.addresses[i].street == "Сапёрный переулок, 20"){
@@ -60,10 +57,9 @@ object AddressPage {
                         resBody.addresses[i].doorphone.toString(),
                         resBody.addresses[i].comment.toString()
                     )
-                    println(111)
-                    println(fullAddress.androidAccessibilityId)
-                    println(checkAddressInPage.androidAccessibilityId)
-                    println(1221)
+
+                    println("Полученный локатор ${fullAddress.androidAccessibilityId}")
+                    println("Необходимый локатор ${checkAddressInPage.androidAccessibilityId}")
                     break
                 }
             }
