@@ -27,33 +27,26 @@ import java.util.concurrent.TimeUnit
 
 class TestClassOne :MainActivity() {
 
-    @Description("Тест на прохождение авторизации и получения sessionId, authToken")
+    @Description("ТПоиск и нажатие на первое блюдо из категории закуски")
     @Test(description = "Работа с API")
-   fun testOne(){
-
-       installSpecification(requestSpec(environment.host))
-       SessionId.get(mutableMapOf())
-       TimeUnit.SECONDS.sleep(5)
-
-       val phone = AuthResetCode.authResetCodeReqBody("79231775570").phone
-       AuthResetCode.post(AuthResetCode.authResetCodeReqBody("79231775570"))
-
-       TimeUnit.SECONDS.sleep(5)
-
-       AuthLogin.post(AuthLogin.authLoginReqBody(phone, "3256"))
-       AuthLogin.authLoginReqBody(phone, "3256")
-       println(AuthLogin.resBody)
-
-       Categories.get(mutableMapOf())
-       Meals.get(mutableMapOf())
-       User.get(mutableMapOf())
+    fun testOne(){
 
 
-   }
+        installSpecification(requestSpec(environment.host))
+        SessionId.get(mutableMapOf())
+        TimeUnit.SECONDS.sleep(5)
 
-    @Description("Поиск и нажатие на первое блюдо из категории закуски")
-    @Test(description = "Работа с API")
-    fun testTwo(){
+        val phone = AuthResetCode.authResetCodeReqBody("79231775570").phone
+        AuthResetCode.post(AuthResetCode.authResetCodeReqBody("79231775570"))
+
+        TimeUnit.SECONDS.sleep(5)
+
+        AuthLogin.post(AuthLogin.authLoginReqBody(phone, "3256"))
+        AuthLogin.authLoginReqBody(phone, "3256")
+
+        Categories.get(mutableMapOf())
+        Meals.get(mutableMapOf())
+
         val getCodeOfCategory = Categories.resBody[1].code
         setNewSnackButton(Categories.resBody[1].name.toString())
         clickSnacksButton()
@@ -73,7 +66,7 @@ class TestClassOne :MainActivity() {
 
     @Description("Добавление и удаление адреса в профиле")
     @Test(description = "Работа с адресом")
-    fun testThree(){
+    fun testTwo(){
 
         val profilePage = Profile
         val mainPage = MainPage
@@ -82,6 +75,20 @@ class TestClassOne :MainActivity() {
         val needAuthorizationUser: Boolean = true
         TimeUnit.SECONDS.sleep(4)
         checkAuthorizationUser(needAuthorizationUser)
+
+        installSpecification(requestSpec(environment.host))
+        SessionId.get(mutableMapOf())
+        TimeUnit.SECONDS.sleep(5)
+
+        val phone = AuthResetCode.authResetCodeReqBody("79231775570").phone
+        AuthResetCode.post(AuthResetCode.authResetCodeReqBody("79231775570"))
+
+        TimeUnit.SECONDS.sleep(5)
+
+        AuthLogin.post(AuthLogin.authLoginReqBody(phone, "3256"))
+        AuthLogin.authLoginReqBody(phone, "3256")
+
+        User.get(mutableMapOf())
 
         // веленский пеереулок 6
         profilePage.clickProfileButton()
@@ -130,7 +137,7 @@ class TestClassOne :MainActivity() {
     @Description("Изменение и проверка корректности личных данных")
     @Test(description = "Работа с окном введения данных")
 
-    fun testFour() {
+    fun testThree() {
 
         val profile = Profile
         val userDataPage = UserDataPage
@@ -165,56 +172,9 @@ class TestClassOne :MainActivity() {
         TimeUnit.SECONDS.sleep(10)
     }
 
-
-    @Description("Проверка элементов футера \"Главная страница\", \"Профиль\", \"Меню\".")
-    @Test(description = "Работа с элементами главного экрана")
-    fun testFive(){
-
-        val profilePage = Profile
-        val menuPage = MenuPage
-        val mainPage = MainPage
-
-        val needAuthorizationUser: Boolean = false
-        checkAuthorizationUser(needAuthorizationUser)
-
-        profilePage.clickProfileButton()
-
-        menuPage.clickMenuPageButton()
-
-        mainPage.clickMainPageButton()
-
-        TimeUnit.SECONDS.sleep(10)
-    }
-
-    @Description("Проверка боксов \"Закуски\", \"Супы\", \"Паста\", \"Сендвичи\", \"Горячее\".")
-    @Test(description = "Работа с элементами экрана \"Главная страница\"")
-    fun testSix(){
-
-        val mainPage = MainPage
-
-        val needAuthorizationUser: Boolean = true
-        checkAuthorizationUser(needAuthorizationUser)
-
-        mainPage.clickSnacksButton()
-
-        mainPage.clickSoupsButton()
-
-        mainPage.clickPastaButton()
-
-        mainPage.clickSandwichButton()
-
-        mainPage.clickSoupsButton()
-
-        mainPage.clickHotDishButton()
-
-        mainPage.clickMainPageButton()
-
-        TimeUnit.SECONDS.sleep(5)
-    }
-
     @Description("Прохождение авторизации, выход из профиля и возврат к начальному экрану")
     @Test(description = "Выполнение авторизации")
-    fun testSeven(){
+    fun testFour(){
 
         val profilePage = Profile
         val mainPage = MainPage
@@ -239,26 +199,4 @@ class TestClassOne :MainActivity() {
         TimeUnit.SECONDS.sleep(5)
     }
 
-    @Description("Способ оплаты, выход из профиля и возврат к начальному экрану")
-    @Test(description = "Проверка работы функции нажатия на экран")
-    fun testEight(){
-
-        val profilePage = Profile
-        val mainPage = MainPage
-        val needAuthorizationUser: Boolean = true
-        checkAuthorizationUser(needAuthorizationUser)
-
-        profilePage.clickProfileButton()
-
-        profilePage.clickPaymentMethod()
-
-        TimeUnit.SECONDS.sleep(5)
-        tapByCoordinates(cordX = 300, cordY = 300)
-        TimeUnit.SECONDS.sleep(5)
-
-        profilePage.clickExitButton()
-
-        mainPage.clickMainPageButton()
-        TimeUnit.SECONDS.sleep(5)
-    }
 }

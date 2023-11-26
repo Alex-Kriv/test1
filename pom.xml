@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.javabydeveloper.allure</groupId>
-    <artifactId>test</artifactId>
+    <artifactId>test1</artifactId>
     <version>19.0.0</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -156,7 +156,7 @@
     </build>
     <profiles>
         <profile>
-            <id>iOSTests</id>
+            <id>IOSTests</id>
             <build>
                 <plugins>
                     <plugin>
@@ -165,7 +165,7 @@
                         <version>2.22.2</version>
                         <configuration>
                             <suiteXmlFiles>
-                                <suiteXmlFile>testng_iOS.xml</suiteXmlFile>
+                                <suiteXmlFile>testng_IOS.xml</suiteXmlFile>
                             </suiteXmlFiles>
                             <argLine>
                                 -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
